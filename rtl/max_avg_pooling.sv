@@ -15,12 +15,12 @@ module max_avg_pooling
     avg_out = '0;
     if (en) // max pooling
     begin
-      if (in1[data_width-2:0] > in2[data_width-2:0])
+      if (in1 > in2)
         max1 = in1;
       else
         max1 = in2;
 
-      if (in3[data_width-2:0] > in4[data_width-2:0])
+      if (in3 > in4)
         max2 = in3;
       else
         max2 = in4;
