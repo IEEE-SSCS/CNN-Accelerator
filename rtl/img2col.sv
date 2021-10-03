@@ -9,8 +9,7 @@ module img2col#(parameter  data_width = 8 )(
     
     );
     
-    int counter = 0 ; 
-
+  
 
     always_comb begin
 
@@ -21,11 +20,11 @@ module img2col#(parameter  data_width = 8 )(
                     begin
                         for (j=0 , j < 5 , j = i+1 ) ;
                             begin
-                               out_cols[counter] = img[i][j] ;  
-                               counter++ ;   
+                                out_cols[i*5+j] = img[i][j] ;  
+                                 
                             end
                     end
-                if (counter == 24) counter = 0  ;     
+                    
             endgenerate      
 
            end     
