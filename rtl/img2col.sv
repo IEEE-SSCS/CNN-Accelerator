@@ -1,14 +1,14 @@
-module img2col#(parameter  data_width = 8 )(
+module img2col#
+    (parameter  data_width = 8 
+     parameter img_size = 5 )(
     input logic clk, 
     input logic nrst , 
     input logic [2:0] k , 
     input logic stride ,
-    input logic [data_width-1:0] img [4:0][4:0] ,
+    input logic [data_width-1:0] img [img_size-1:0][img_size-1:0] ,
     input logic in_valid  , 
-    output logic [data_width-1 : 0 ] out_cols [31:0] 
-    
+    output logic [7:0] out_cols [24:0] 
     );
-    
   
 
     always_comb begin
