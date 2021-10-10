@@ -7,7 +7,7 @@ module pooling_layer_tb();
             S = 2;
 
   localparam T = 20; // clk period
-  logic clk, nrst, ctrl_pool, start_pool;
+  logic clk, nrst, ctrl_pool, in_pipe_en, out_pipe_en;
 
   logic [data_width-1:0] pooling_in [pooling_units-1:0] [(K*S)-1:0];
   logic [data_width-1:0] pooling_out [pooling_units-1:0];
@@ -38,18 +38,22 @@ module pooling_layer_tb();
   begin
     // initial inputs
     ctrl_pool = 1'b1;
-    start_pool = 1'b0;
+    in_pipe_en  = 1'b0;
+    out_pipe_en = 1'b0;
     pooling_in = '{default:8'h00};
     @(posedge nrst);
     @(negedge clk);
 
     // test max pooling
     ctrl_pool = 1'b1;
-    start_pool = 1'b1;
+    in_pipe_en = 1'b1;
     pooling_in = '{'{8'd1, 8'd5, 8'd6, 8'd7},
                    '{8'd2, 8'd1, 8'd8, 8'd9},
                    '{8'd3, 8'd1, 8'd2, 8'd4},
                    '{8'd4, 8'd5 ,8'd0 ,8'd1}};
+                   
+    @(negedge clk);
+    out_pipe_en = 1'b1;
 
     repeat(3) @(negedge clk);
     if (pooling_out[3] != 8'd7)
