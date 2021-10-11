@@ -1,32 +1,24 @@
-parameter data=3;
-parameter address=10;
-parameter n=3;
-parameter depth=15;
-module memory (
-output [data-1:0]rdata,
-input  [data-1:0]wdata,
-input winc ,wfull ,clk,rst,
-input [address-1:0] waddr, 
-input [address-1:0] raddr 
+module fifomem #(
+    parameter DWidth  = 8,
+    parameter Depth   = 8, 
+    localparam AWidth = $clog2(Depth) 
+)(
+    input  logic clk_i, w_en_i,
+
+    input  logic [DWidth-1 : 0] w_data_i,
+    input  logic [AWidth-1 : 0] w_addr_i, 
+    input  logic [AWidth-1 : 0] r_addr_i, 
+
+    output logic [DWidth-1:0] r_data_o
 );
 
+    //localparam Depth = 2**AWidth;
 
-reg [data-1:0] mem [depth-1:0];
-reg wclken;
-assign wclken = winc &(~wfull);
-assign rdata=mem[raddr];
+    logic [DWidth-1 : 0] mem [Depth];
 
-always@(posedge clk or negedge rst) //always_ff
+    assign r_data_o = mem[r_addr_i];
 
-begin
-if(rst)
-begin
-for (int i=0 ;i<depth-1 ;i++) begin mem[i]=0; end 
-end
-else if (wclken==1) mem[waddr]= wdata;
-
-end
-
-
-
-endmodule 
+    always_ff @(posedge clk_i) begin
+        if (w_en_i) mem[w_addr_i] <= w_data_i;
+    end
+endmodule : fifomem

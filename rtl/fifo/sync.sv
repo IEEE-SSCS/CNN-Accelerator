@@ -1,28 +1,14 @@
+module sync #(parameter Width = 3)(
+    input  logic clk_i, nrst_i,
 
-parameter n=3;
-module synchronizers (
-input rst,clk,
-output reg [n:0]wq2_rptr,
-input [n:0]rptr
+    input  logic [Width-1 : 0] input_i,
+    output logic [Width-1 : 0] output_o
 );
 
-logic [n:0]signal;
-always@(posedge clk ,negedge rst)//always_ff
-begin
+    logic [Width-1 : 0] input2;
 
-if (rst) 
-begin 
-wq2_rptr=0;
-signal=0;
-end
-else
-begin  
-wq2_rptr=signal;
-signal=rptr;
-end 
-
-end 
-
-
-
+    always_ff @(posedge clk_i ,negedge nrst_i) begin
+        if (!nrst_i) {output_o, input2} <= 0;
+        else {input2, output_o} <= {input_i, input2}; 
+    end 
 endmodule 

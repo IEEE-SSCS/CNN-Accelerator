@@ -1,73 +1,62 @@
-
-parameter n=3;
-//-------------------------bin2gray---------------------------------------
-function [n-1:0] gnext;
-         input [n-1:0] bnext;
-         int i;
-     begin
-       gnext[n-1]=bnext[n-1];
-          for ( i=n-1; i>=0; i-- )
-            begin
-              gnext[i-1]=bnext[i]^bnext[i-1] ;
-             end
-       end
- endfunction 
-//-------------------------gray2binary---------------------------------------
-function [n-1:0] bin;
-      input [n-1:0] ptr;
-      int i;
-         begin
-bin[n-1]=ptr[n-1];
-   for ( i=n-1; i>=0; i-- )
-     begin
-   bin[i-1]=bin[i]^ptr[i-1] ;
-     end
-end
- endfunction 
-
-
-
-module counter1 (
-input inc,
-input eOf,
-input clck ,rst,
-output reg [n-1:0] ptr,
-output  reg addrmsb 
+module counter_1 #(parameter Width = 3)(
+    input logic clk_i, nrst_i,
+    input logic inc_i, full_empty_i,
+    
+    output logic [Width-1 : 0] bin_count_o,
+    output logic [Width-1 : 0] gray_count_o,
+    output logic msb_o
 );
 
+    logic [Width : 0] bnext;
+    logic [Width : 0] gnext;
+    
+    logic [Width : 0] bin;
+    
+    logic             msbnext;
 
+    logic [Width : 0] bin_count_q;
+    logic [Width : 0] gray_count_q;
+    logic             msb_q;
 
-reg [n-1:0] bnext;
-reg [n-1:0] gnext1;
-reg msbnext;
+    assign bnext   = bin + (inc_i & !full_empty_i);
+    assign msbnext = gnext[Width] ^ gnext[Width-1];
+    
+    //------------------------------------------------
+    // Gray To Binary Conversion
+    //------------------------------------------------
+    always_comb begin
+        bin[Width] = gray_count_q[Width];
+        for (int i = Width; i >= 0; i--) begin
+            bin[i-1] = bin[i] ^ gray_count_q[i-1];
+        end
+    end
 
+    //------------------------------------------------
+    // Binary To Gray Conversion
+    //------------------------------------------------
+    always_comb begin
+        gnext[Width] = bnext[Width];
+        for (int i = Width; i >= 0; i--)begin
+              gnext[i-1] = bnext[i] ^ bnext[i-1];
+        end
+    end
+    
+    //------------------------------------------------
+    // Registers
+    //------------------------------------------------
+    always_ff @(posedge clk_i, negedge nrst_i) begin
+        if(!nrst_i) begin
+            msb_q        <= 0;
+            gray_count_q <= 0; 
+            bin_count_q  <= 0;
+        end else begin
+            bin_count_q  <= bnext;
+            gray_count_q <= gnext;
+            msb_q        <= msbnext;
+        end
+    end
 
-
-assign bnext = bin(ptr)+ (inc&~eOf);
-
-
-assign gnext1= gnext(bnext);
-assign msbnext = gnext1[n-1] ^ gnext1[n-2];
-
-
-
-always@(posedge clck or negedge rst) //always_ff
-
-begin 
-
-if(rst)
-begin
- ptr=0;
- addrmsb=0;
-end
-else 
-begin
-  ptr=gnext1;
-   addrmsb=msbnext; 
-
-end 
-
-
-end
-
+    assign bin_count_o  = bin_count_q[Width-1 : 0];
+    assign gray_count_o = {msb_q, gray_count_q[Width-2:0]};
+    assign msb_o        = gray_count_q[Width];
 endmodule 
