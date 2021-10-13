@@ -48,6 +48,7 @@ module PU_CTRL
   begin
     in_pipe_en  = 0;
     out_pipe_en = 0;
+    max_avg     = 1;
     next_state  = current_state;
     next_count  = current_count;
     address     = temp_add;
@@ -203,6 +204,7 @@ module PU_CTRL
              pipe_ip:
              begin
                in_pipe_en = 1;
+               max_avg    = inst[2];
                //next_count = current_count + 1;
                unique case (array_dim)
                  3'h3, 3'h4:
