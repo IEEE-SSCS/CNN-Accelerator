@@ -49,6 +49,7 @@ module PU_CTRL
     in_pipe_en  = 0;
     out_pipe_en = 0;
     max_avg     = 1;
+    done        = 0;
     next_state  = current_state;
     next_count  = current_count;
     address     = temp_add;
@@ -59,6 +60,7 @@ module PU_CTRL
                if(start_pool)
                begin
                  next_count = '0;
+                 done       = 0;
                  next_state = data_adress;
                end
                else

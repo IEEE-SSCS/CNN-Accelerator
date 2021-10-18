@@ -27,9 +27,10 @@ module Register_File
             end
 		      else
           begin
-          registers[add_in] <= (Wr_ctrl) ? in : registers[add_in];
+          registers[add_in] <= ((add_1 != 0 && add_2 != 0 && add_3 != 0 && add_4 != 0) && Wr_ctrl) ? in : registers[add_in];
           end
         end
     endcase
   end
 endmodule
+
