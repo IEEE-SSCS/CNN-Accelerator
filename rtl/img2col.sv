@@ -7,7 +7,7 @@ module img2col#
     input logic stride ,
     input logic [data_width-1:0] img [img_size-1:0][img_size-1:0] ,
     input logic in_valid  , 
-    output logic [7:0] out_cols [24:0] 
+        output logic [7:0] out_cols [31:0] 
     );
   
 
@@ -26,10 +26,10 @@ module img2col#
                     end
                     
             endgenerate      
-
-           end     
+             out_cols[25:31]=0;      
+            end     
         else begin
-            // the output will bel zero 
+           out_cols=0; 
         end
 
     end
