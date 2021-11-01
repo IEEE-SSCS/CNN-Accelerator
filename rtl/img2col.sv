@@ -10,6 +10,7 @@ module img2col#
         output logic [7:0] out_cols [31:0] 
     );
   
+    
 
     always_comb begin
 
