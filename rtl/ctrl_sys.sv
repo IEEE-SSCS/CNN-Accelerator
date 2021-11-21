@@ -23,7 +23,7 @@ always @(posedge clk or negedge rst)
 always @( present , w_ps )
 
 	begin 
-	 next_num = rnd_num;
+	 y = x;
 		next=s0;
 		case(present) 
 			s0: if(w_ps==1) begin next=s1; ctrl_out= 1; x=0; end
