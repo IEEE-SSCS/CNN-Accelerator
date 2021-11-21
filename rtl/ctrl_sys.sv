@@ -2,7 +2,7 @@ module sys_ctrl (
 input clk,
 input w_ps,
 input rst,
-output reg ctrl_out,test
+output reg ctrl_out,
 );
 
 parameter s0 = 2'b00  ,
@@ -30,7 +30,7 @@ always_comb
 			s0: if(w_ps==1) begin next=s1; ctrl_out= 1;x = 4'b0; end
 			    else     begin next=s0 ;x = 4'b0; end   
                                                      // load to weight
-			s1: if(w_ps==1 && x< H) begin  next=s1;  ctrl_out= 1;  x= y+ 1; test=1; end
+			s1: if(w_ps==1 && x< H) begin  next=s1;  ctrl_out= 1;  x= y+ 1;  end
                                        // load to partial_sum
 			    else  begin  next=s2;  ctrl_out= 0; end 
 
