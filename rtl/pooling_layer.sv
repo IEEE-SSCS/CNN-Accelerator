@@ -6,7 +6,7 @@ module pooling_layer
      parameter K = 2
    )
    (
-     input logic clk, nrst, ctrl_pool, start_pool,
+     input logic clk, nrst, ctrl_pool, in_pipe_en, out_pipe_en,
      input logic [data_width-1:0] pooling_in [pooling_units-1:0] [(K*S)-1:0],
      output logic [data_width-1:0] pooling_out [pooling_units-1:0]
    );
@@ -18,7 +18,7 @@ module pooling_layer
   begin: input_data_pipe
     if(!nrst)
       data_in <= '{default:0};
-    else if(start_pool)
+    else if(in_pipe_en)
       data_in <=  pooling_in;
     else
       data_in <= data_in;
@@ -42,8 +42,10 @@ module pooling_layer
   begin: out_data_pipe
     if(!nrst)
       pooling_out <= '{default:0};
-    else
+    else if (out_pipe_en)
       pooling_out <= data_out;
+    else
+      pooling_out <= pooling_out;
   end: out_data_pipe
 
 endmodule

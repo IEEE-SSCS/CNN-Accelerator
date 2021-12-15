@@ -4,7 +4,7 @@ module output_buffer
   )
   (
     input logic clk, nrst,
-    input logic Wr_ctrl [width-1:0],
+    input logic Wr_ctrl [width-1:0], en [width-1:0], 
     input logic [data_width-1:0] in [width-1:0],
     input logic [4:0] add_1 [width-1:0],
     input logic [4:0] add_2 [width-1:0],
@@ -23,6 +23,7 @@ module output_buffer
     for (i=0; i<width; i=i+1)
       Register_File RF(
                         .clk(clk), .nrst(nrst),
+                        .en(en[i]),
                         .Wr_ctrl(Wr_ctrl[i]),
                         .in(in[i]),
                         .add_1(add_1[i]),
